@@ -6,12 +6,21 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float speed;     // 속도
+    public float health;
+    public float maxHealth;
+    public RuntimeAnimatorController[] animCon;
     public Rigidbody2D target;  // 목표(물리적 -> 리지드바디)
 
-    bool isLive = true;                // 생존 여부
+    bool isLive;                // 생존 여부
 
     Rigidbody2D rigid;
+    Animator anim;
     SpriteRenderer spriter;
+
+    void Awake()
+    {
+        anim = GetComponent<Animator>();            // Init 함수가 Start보다 빨리 호출돼서 anim 변수가 초기화되지 않음
+    }
 
     void Start()
     {
@@ -41,5 +50,40 @@ public class Enemy : MonoBehaviour
     {
         // OnEnable에서 타겟 변수에 게임매니저를 활용하여 플레이어 할당
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+        isLive = true;          // 활성화 될 때 살아남
+        health = maxHealth;     // 죽어있거나 새로 생기면 최대 체력을 채워서 생성
+    }
+
+    // 초기 속성을 적용하는 함수 추가
+    public void Init(SpawnData data)     // 매개 변수로 소환데이터 하나 지정
+    {
+        anim.runtimeAnimatorController = animCon[data.spriteType];      // 매개변수의 속성을 몬스터 속성 변경에 활용하기
+        speed = data.speed;
+        maxHealth = data.health;
+        health = data.health;
+
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Bullet"))
+            return;
+
+        health -= collision.GetComponent<Bullet>().damage;          // Bullet 컴포넌트로 접근하여 데미지를 가져와 피격 계산하기
+
+        if (health > 0)
+        {
+            // 피격 애니메이션
+        }
+        else
+        {
+            Dead();
+        }
+
+        void Dead()
+        {
+            // 오브젝트 풀링이기 떄문에 Destroy가 아닌 false
+            gameObject.SetActive(false);
+        }
     }
 }
