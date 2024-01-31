@@ -14,23 +14,30 @@ public class Enemy : MonoBehaviour
     bool isLive;                // 생존 여부
 
     Rigidbody2D rigid;
+    Collider2D coll;
     Animator anim;
     SpriteRenderer spriter;
+    WaitForFixedUpdate wait;
 
     void Awake()
     {
         anim = GetComponent<Animator>();            // Init 함수가 Start보다 빨리 호출돼서 anim 변수가 초기화되지 않음
+        coll = GetComponent<Collider2D>();
+        spriter = GetComponent<SpriteRenderer>();
+        rigid = GetComponent<Rigidbody2D>();
     }
 
     void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        spriter = GetComponent<SpriteRenderer>();
+
+        wait = new WaitForFixedUpdate();
+
     }
 
     void FixedUpdate()
     {
-        if (!isLive)            // 몬스터가 살아있는 동안에만 움직이도록 조건 추가
+        // 넉백 설정 : 애니메이터가 진행중일 때 현재 정보를 "GetCurrentAnimatorStateInfo(레이어 번호)" 로 가져오고  IsName() 으로 이름을 매치함
+        if (!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))            // 몬스터가 살아있는 동안에만 움직이도록 조건 추가
             return;
 
         Vector2 dirVec = target.position - rigid.position;      // 위치 차이 = 타겟 위치 - 나의 위치, 값이 1이 아니기 때문에 -> 방향 = 위치 차이의 정규화(normalized)
@@ -51,6 +58,10 @@ public class Enemy : MonoBehaviour
         // OnEnable에서 타겟 변수에 게임매니저를 활용하여 플레이어 할당
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         isLive = true;          // 활성화 될 때 살아남
+        coll.enabled = true;
+        rigid.simulated = true;
+        spriter.sortingOrder = 2;
+        anim.SetBool("Dead", false);
         health = maxHealth;     // 죽어있거나 새로 생기면 최대 체력을 채워서 생성
     }
 
@@ -66,24 +77,42 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Bullet"))
+        if (!collision.CompareTag("Bullet") || !isLive)     // 사망 로직이 연달아 실행되는 것을 방지하기 위해 조건 추가(!isLive)
             return;
 
         health -= collision.GetComponent<Bullet>().damage;          // Bullet 컴포넌트로 접근하여 데미지를 가져와 피격 계산하기
+        StartCoroutine(KnockBack());            // 문자열로 감싸도 가능     StartCoroutine("KnockBack");
 
         if (health > 0)
         {
-            // 피격 애니메이션
+            anim.SetTrigger("Hit");
         }
         else
         {
-            Dead();
+            isLive = false;
+            coll.enabled = false;           // 컴포넌트 비활성화
+            rigid.simulated = false;        // 리지드바디의 물리적 비활성화는 .simulated = false;
+            spriter.sortingOrder = 1;       // 스프라이트 랜더러의 sorting order 감소
+            anim.SetBool("Dead", true);
+            GameManager.instance.kill++;    // 몬스터 사망 시 킳수 증가
+            GameManager.instance.GetExp();  // 몬스터 사망 시 겅험치 함수 호출
         }
+    }
 
-        void Dead()
-        {
-            // 오브젝트 풀링이기 떄문에 Destroy가 아닌 false
-            gameObject.SetActive(false);
-        }
+    // IEnumerator : 코루틴만의 반환형 인터페이스 (앞 글자가 I가 들어가면 인터페이스 관련)
+    IEnumerator KnockBack()
+    {
+        yield return wait; // 하나의 물리 프레임 딜레이
+        Vector3 playerPos = GameManager.instance.player.transform.position;
+        Vector3 dirVec = transform.position - playerPos;                // 플레이어의 반대방향으로 가기 위한 계산
+        rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);     // 순간적인 힘을 주기 위해 Impulse
+
+    }
+
+
+    void Dead()
+    {
+        // 오브젝트 풀링이기 떄문에 Destroy가 아닌 false
+        gameObject.SetActive(false);
     }
 }
