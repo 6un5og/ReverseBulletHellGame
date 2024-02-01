@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public float maxGameTime = 2 * 10f;
 
     [Header("# Player Info")] // 적 처치 후 경험치 관련 변수 선언
+    public int health;
+    public int maxHealth = 100;
     public int level;
     public int kill;
     public int exp;
@@ -24,6 +26,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;                        // this 자기 자신 초기화
+    }
+
+    void Start()
+    {
+        health = maxHealth;
     }
 
     void Update()
