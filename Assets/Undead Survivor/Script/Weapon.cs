@@ -27,6 +27,9 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         switch (id)
         {
             case 0:
@@ -51,7 +54,7 @@ public class Weapon : MonoBehaviour
 
     public void LevelUp(float damage, int count)
     {
-        this.damage = damage;
+        this.damage = damage * Character.Damage;
         this.count += count;
 
         if (id == 0)
@@ -71,8 +74,8 @@ public class Weapon : MonoBehaviour
 
         // Property Set
         id = data.itemId;
-        damage = data.baseDamage;
-        count = data.baseCount;
+        damage = data.baseDamage * Character.Damage;
+        count = data.baseCount + Character.Count;
 
         // 데이터를 프리팹으로 넣었기 때문에 하나씩 탐색으로 프리팹id 로 맞춰주고 빠짐
         // 스크립트블 오브젝트의 독립성을 위해서 인덱스가 아닌 프리팹으로 설정
@@ -91,11 +94,11 @@ public class Weapon : MonoBehaviour
         switch (id)
         {
             case 0:
-                speed = 150;       // - 값이면 시계방향으로 돌아감
+                speed = 150 * Character.WeaponSpeed;       // - 값이면 시계방향으로 돌아감
                 Batch();
                 break;
             default:
-                speed = 0.4f;       // 연사속도
+                speed = 0.5f * Character.WeaponRate;       // 연사속도
                 break;
         }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,19 +14,40 @@ public class Item : MonoBehaviour
 
     Image icon;                 // using UnityEngine.UI;
     Text textLevel;
+    Text textName;
+    Text textDesc;
 
     void Awake()
     {
         icon = GetComponentsInChildren<Image>()[1];     // 자식들 모두 끌어오기, 본인포함이기 때문에 [1]
         icon.sprite = data.itemIcon;
 
-        Text[] texts = GetComponentsInChildren<Text>();
+        Text[] texts = GetComponentsInChildren<Text>(); // GetComponents의 순서는 계층구조의 순서를 따라감
         textLevel = texts[0];
+        textName = texts[1];
+        textDesc = texts[2];
+        textName.text = data.itemName;
     }
 
-    void LateUpdate()
+    void OnEnable()                              // 레벨 텍스트 로직(활성화 될 때 자동으로 실행)
     {
         textLevel.text = "Lv." + (level + 1);
+
+        switch (data.itemType)
+        {
+            case ItemData.ItemType.Melee:
+            case ItemData.ItemType.Range:
+                // damage는 소수점으로 나와있기 때문에 백분율을 위해 100 곱하기
+                textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100, data.counts[level]);
+                break;
+            case ItemData.ItemType.Glove:
+            case ItemData.ItemType.Shoe:
+                textDesc.text = string.Format(data.itemDesc, data.damages[level] * 100);
+                break;
+            case ItemData.ItemType.Heal:
+                textDesc.text = string.Format(data.itemDesc);
+                break;
+        }
     }
 
     public void OnClick()

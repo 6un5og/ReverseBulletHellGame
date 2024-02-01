@@ -36,6 +36,9 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         // 넉백 설정 : 애니메이터가 진행중일 때 현재 정보를 "GetCurrentAnimatorStateInfo(레이어 번호)" 로 가져오고  IsName() 으로 이름을 매치함
         if (!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))            // 몬스터가 살아있는 동안에만 움직이도록 조건 추가
             return;

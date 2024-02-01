@@ -49,10 +49,12 @@ public class Gear : MonoBehaviour
             switch (weapon.id)          // 근접과 원거리
             {
                 case 0:
-                    weapon.speed = 150 + (150 * rate);      // 근거리 : 값이 길수록 빠름
+                    float speed = 150 * Character.WeaponSpeed;
+                    weapon.speed = speed + (speed * rate);      // 근거리 : 값이 길수록 빠름
                     break;
                 default:
-                    weapon.speed = 0.5f * (1f - rate);      // 원거리 : 값이 짧을수록 많이 발사
+                    speed = 0.5f * Character.WeaponRate;
+                    weapon.speed = speed * (1f - rate);      // 원거리 : 값이 짧을수록 많이 발사
                     break;
             }
         }
@@ -60,7 +62,7 @@ public class Gear : MonoBehaviour
 
     void SpeedUp()       // 이속 올리는 함수
     {
-        float speed = 3;
+        float speed = 3 * Character.Speed;
         GameManager.instance.player.speed = speed + speed * rate;
     }
 
