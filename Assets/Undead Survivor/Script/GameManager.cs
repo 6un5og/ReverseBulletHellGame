@@ -27,11 +27,13 @@ public class GameManager : MonoBehaviour
     public Player player;
     public LevelUp uiLevelUp;
     public Result uiResult;
+    public Transform uiJoy;
     public GameObject enemyCleaner;
 
     void Awake()
     {
         instance = this;                        // this 자기 자신 초기화
+        Application.targetFrameRate = 60;       // 프레임 직접 지정 (안하면 30프레임으로 떨어짐 (아마 컴퓨터 사양에 따라 좌지우지 되는 듯))
     }
 
     public void GameStart(int id)
@@ -46,6 +48,9 @@ public class GameManager : MonoBehaviour
         // 현재 무기가 2개밖에 없기 떄문에 캐릭터가 더 추가된다면 기본무기 지급을 위해 2로 나눈 나머지값을 인자 값으로 넣기
 
         Resume();                   // 게임 재시작시 타임스케일 1로 만들어주기
+
+        AudioManager.instance.PlayBgm(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);     // enum으로 쉽게 로직 구현 가능
     }
 
     public void GameOver()
@@ -59,9 +64,12 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);                      // 묘비 조금 볼 시간 벌기
 
-        uiResult.gameObject.SetActive(true);                       // uiResult 보여주기
+        uiResult.gameObject.SetActive(true);                        // uiResult 보여주기
         uiResult.Lose();
         Stop();
+
+        AudioManager.instance.PlayBgm(false);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
     }
 
     public void GameVictory()
@@ -79,11 +87,19 @@ public class GameManager : MonoBehaviour
         uiResult.gameObject.SetActive(true);
         uiResult.Win();
         Stop();
+
+        AudioManager.instance.PlayBgm(false);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Win);
     }
 
     public void GameRetry()
     {
         SceneManager.LoadScene(0);    // LoadScene : 이름 혹은 인덱스로 장면을 새롭게 부르는 함수
+    }
+
+    public void GameQuit()
+    {
+        Application.Quit();
     }
 
     void Update()
@@ -121,12 +137,13 @@ public class GameManager : MonoBehaviour
     {
         isLive = false;
         Time.timeScale = 0;
-
+        uiJoy.localScale = Vector3.zero;        // 조이스틱
     }
 
     public void Resume()
     {
         isLive = true;
         Time.timeScale = 1;
+        uiJoy.localScale = Vector3.one;
     }
 }

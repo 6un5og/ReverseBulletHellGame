@@ -139,7 +139,7 @@ public class Weapon : MonoBehaviour
             bullet.Rotate(rotVec);
             bullet.Translate(bullet.up * 1.5f, Space.World);    // 이동하는 방향의 self 값은 bullet.up에서 이미 함. 이동방향은 Space.world 기준으로
             // bullet 컴포넌트 접근하여 속성 초기화 함수 호출
-            bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero);     // -1 is Infinity Per. (좋은 주석)
+            bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero);     // -100 is Infinity Per. (좋은 주석)
         }
     }
 
@@ -156,5 +156,7 @@ public class Weapon : MonoBehaviour
         bullet.position = transform.position;
         bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);   // FromToRotation : 지정된 축을 중심으로 목표를 향해 회전하는 함수
         bullet.GetComponent<Bullet>().Init(damage, count, dir);         // 원거리 공격에 맞게 초기화 함수 호출
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Range);
     }
 }

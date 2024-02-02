@@ -89,6 +89,7 @@ public class Enemy : MonoBehaviour
         if (health > 0)
         {
             anim.SetTrigger("Hit");
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
         else
         {
@@ -99,6 +100,11 @@ public class Enemy : MonoBehaviour
             anim.SetBool("Dead", true);
             GameManager.instance.kill++;    // 몬스터 사망 시 킳수 증가
             GameManager.instance.GetExp();  // 몬스터 사망 시 겅험치 함수 호출
+
+            if (GameManager.instance.isLive)
+            {
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
+            }
         }
     }
 
