@@ -10,7 +10,6 @@ public class Scanner : MonoBehaviour
     public RaycastHit2D[] targets;
     public Transform nearestTarget;
 
-
     void FixedUpdate()
     {
         // CircleCastAll : 원형의 캐스트를 쏘고 모든 결과를 반환하는 함수
@@ -25,8 +24,7 @@ public class Scanner : MonoBehaviour
         Transform result = null;
         float diff = 100;
 
-        // 가장 가까운 타겟과의 거리를 반복문을 통해서 result로 반환
-        foreach (RaycastHit2D target in targets)
+        foreach (RaycastHit2D target in targets)        // 가장 가까운 타겟과의 거리를 반복문을 통해서 result로 반환
         {
             Vector3 myPos = transform.position;                     // 플레이어 위치
             Vector3 targetPos = target.transform.position;          // 타겟 위치

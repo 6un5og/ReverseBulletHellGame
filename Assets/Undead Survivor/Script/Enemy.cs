@@ -29,9 +29,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-
         wait = new WaitForFixedUpdate();
-
     }
 
     void FixedUpdate()
@@ -58,8 +56,7 @@ public class Enemy : MonoBehaviour
 
     void OnEnable()         // Enemy를 prefabs로 넘기면서 target을 잃었기 때문에 Enemy가 생성되고나서 바로 본인 스스로 타겟을 초기화시킴
     {
-        // OnEnable에서 타겟 변수에 게임매니저를 활용하여 플레이어 할당
-        target = GameManager.instance.player.GetComponent<Rigidbody2D>();
+        target = GameManager.instance.player.GetComponent<Rigidbody2D>();   // OnEnable에서 타겟 변수에 게임매니저를 활용하여 플레이어 할당
         isLive = true;          // 활성화 될 때 살아남
         coll.enabled = true;
         rigid.simulated = true;
@@ -98,30 +95,24 @@ public class Enemy : MonoBehaviour
             rigid.simulated = false;        // 리지드바디의 물리적 비활성화는 .simulated = false;
             spriter.sortingOrder = 1;       // 스프라이트 랜더러의 sorting order 감소
             anim.SetBool("Dead", true);
-            GameManager.instance.kill++;    // 몬스터 사망 시 킳수 증가
+            GameManager.instance.kill++;    // 몬스터 사망 시 킬 수 증가
             GameManager.instance.GetExp();  // 몬스터 사망 시 겅험치 함수 호출
 
             if (GameManager.instance.isLive)
-            {
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
-            }
         }
     }
 
-    // IEnumerator : 코루틴만의 반환형 인터페이스 (앞 글자가 I가 들어가면 인터페이스 관련)
-    IEnumerator KnockBack()
+    IEnumerator KnockBack()     // IEnumerator : 코루틴만의 반환형 인터페이스 (앞 글자가 I가 들어가면 인터페이스 관련)
     {
-        yield return wait; // 하나의 물리 프레임 딜레이
+        yield return wait;      // 하나의 물리 프레임 딜레이
         Vector3 playerPos = GameManager.instance.player.transform.position;
         Vector3 dirVec = transform.position - playerPos;                // 플레이어의 반대방향으로 가기 위한 계산
         rigid.AddForce(dirVec.normalized * 3, ForceMode2D.Impulse);     // 순간적인 힘을 주기 위해 Impulse
-
     }
-
 
     void Dead()
     {
-        // 오브젝트 풀링이기 떄문에 Destroy가 아닌 false
-        gameObject.SetActive(false);
+        gameObject.SetActive(false);        // 오브젝트 풀링이기 때문에 Destroy가 아닌 false
     }
 }

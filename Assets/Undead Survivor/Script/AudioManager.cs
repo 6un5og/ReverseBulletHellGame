@@ -62,13 +62,9 @@ public class AudioManager : MonoBehaviour
     public void PlayBgm(bool isPlay)
     {
         if (isPlay)
-        {
             bgmPlayer.Play();
-        }
         else
-        {
             bgmPlayer.Stop();
-        }
     }
 
     public void EffectBgm(bool isPlay)
@@ -86,10 +82,9 @@ public class AudioManager : MonoBehaviour
                 continue;                                           // 넘어가기
 
             int ranIndex = 0;
+
             if (sfx == Sfx.Hit || sfx == Sfx.Melee)
-            {
                 ranIndex = Random.Range(0, 2);
-            }
 
             channelIndex = loopIndex;                               // 실행하게 됐기 때문에 루프인덱스로 채널인덱스를 바꿔줌
             sfxPlayers[loopIndex].clip = sfxClips[(int)sfx];        // sfx배열에 맞는 클립을 enum 값에서 가져와서 형변환 시키고 플레이어 인덱스 번호에 넣음

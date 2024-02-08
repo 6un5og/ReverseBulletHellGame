@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AchiveManager : MonoBehaviour
@@ -23,7 +22,6 @@ public class AchiveManager : MonoBehaviour
         {
             Init();
         }
-
     }
 
     void Init()
@@ -32,8 +30,7 @@ public class AchiveManager : MonoBehaviour
         // SetInt 함수를 사용하여 key와 연결된 int형 데이터를 저장
         PlayerPrefs.SetInt("MyData", 1);
 
-        // 효율성을 위해 foreach문 돌리기
-        foreach (Achive achive in achives)
+        foreach (Achive achive in achives)              // 효율성을 위해 foreach문 돌리기
         {
             PlayerPrefs.SetInt(achive.ToString(), 0);   // ToString() 으로 문자열로 바꿔서 넣어주기 (0은 잠금캐릭터 1은 해금캐릭터)
         }
@@ -55,7 +52,6 @@ public class AchiveManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void LateUpdate()
     {
         foreach (Achive achive in achives)
@@ -73,8 +69,7 @@ public class AchiveManager : MonoBehaviour
             case Achive.UnlockPotato:
                 if (GameManager.instance.isLive)
                 {
-                    // 게임 성공 시 전멸폭탄이 터져서 생존해도 해금되기 때문에 예외처리
-                    isAchive = GameManager.instance.kill >= 10;
+                    isAchive = GameManager.instance.kill >= 10;         // 게임 성공 시 전멸폭탄이 터져서 생존해도 해금되기 때문에 예외처리
                 }
                 break;
             case Achive.UnlockBean:

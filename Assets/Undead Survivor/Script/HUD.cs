@@ -6,10 +6,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType
-    {
-        Exp, Level, Kill, Time, Health
-    }
+    public enum InfoType { Exp, Level, Kill, Time, Health }
     public InfoType type;       // 선언한 열거형을 타입으로 변수 추가
 
     Text myText;
@@ -21,8 +18,7 @@ public class HUD : MonoBehaviour
         mySlider = GetComponent<Slider>();
     }
 
-    // 데이터가 Update에서 연산이 이루어지기 때문에 그 연산이 끝나고 LateUpdate로 처리
-    void LateUpdate()
+    void LateUpdate()           // 데이터가 Update에서 연산이 이루어지기 때문에 그 연산이 끝나고 LateUpdate로 처리
     {
         switch (type)
         {

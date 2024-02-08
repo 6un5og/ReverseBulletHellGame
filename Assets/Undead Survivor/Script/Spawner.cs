@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour
     public float levelTime;
 
     int level;
-    float timer;                        // 소환 타이머 변수
+    float timer;        // 소환 타이머 변수
     void Awake()
     {
         spawnPoint = GetComponentsInChildren<Transform>();      // 배열 초기화 GetComponentsInChildren
@@ -35,7 +35,6 @@ public class Spawner : MonoBehaviour
             timer = 0;                  // 원래대로 초기화
             Spawn();                    // 타이머가 일정 시간에 도달하면 소환하도록 작성
         }
-
     }
 
     void Spawn()
@@ -45,14 +44,12 @@ public class Spawner : MonoBehaviour
         enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;                  // 만들어둔 소환 위치 중 하나로 배치되도록 작성
         enemy.GetComponent<Enemy>().Init(spawnData[level]);
     }
-
 }
-// 코드 위에 [] 가 있으면 속성자라는 뜻
-[System.Serializable]
-// 소환 데이터를 담당하는 클래스 선언
-public class SpawnData
-{
 
+[System.Serializable]       // 코드 위에 [] 가 있으면 속성자라는 뜻
+
+public class SpawnData      // 소환 데이터를 담당하는 클래스 선언
+{
     // 추가할 속성들 : 스프라이트 타입, 소환 시간, 체력, 속도
     public float spawnTime;
     // 밑 세개는 enemy클래스에서 호출해서 씀

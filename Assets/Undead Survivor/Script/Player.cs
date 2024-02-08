@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
     SpriteRenderer spriter;
     Animator anim;
 
-    // Start is called before the first frame update
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -28,7 +27,7 @@ public class Player : MonoBehaviour
 
     void OnEnable()
     {
-        speed *= Character.Speed;
+        speed *= Character.Speed;       // 각 캐릭터의 계수에 따라
         anim.runtimeAnimatorController = animCon[GameManager.instance.playerId];    // 플레이어 선택 시 플레이어 ID에 맞는 애니메이터 넣기
     }
 

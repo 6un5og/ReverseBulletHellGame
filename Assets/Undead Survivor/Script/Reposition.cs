@@ -36,13 +36,11 @@ public class Reposition : MonoBehaviour
                 diffY = Mathf.Abs(diffY);
 
                 if (diffX > diffY)      // 두 오브젝트의 거리 차이에서 X축이 Y축보다 크면 수평 이동
-                {
                     transform.Translate(Vector3.right * dirX * 40);     // 땅 두칸 이동
-                }
+
                 else if (diffX < diffY)
-                {
                     transform.Translate(Vector3.up * dirY * 40);
-                }
+
                 break;
             case "Enemy":
                 if (coll.enabled)                           // 적 콜라이더가 활성화 되어있는지 (적 시체는 콜라이더 false)
@@ -57,6 +55,5 @@ public class Reposition : MonoBehaviour
                 break;
         }
     }
-
 }
 

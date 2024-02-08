@@ -20,11 +20,6 @@ public class Weapon : MonoBehaviour
         player = GameManager.instance.player;
     }
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
         if (!GameManager.instance.isLive)
@@ -45,7 +40,6 @@ public class Weapon : MonoBehaviour
                 }
                 break;
         }
-
         if (Input.GetButtonDown("Jump"))
         {
             LevelUp(10, 1);
@@ -118,7 +112,6 @@ public class Weapon : MonoBehaviour
             // for 문으로 count 만큼 풀링에서 가져오기, 가져온 오브젝트의 Transform을 지역변수로 저장
             Transform bullet;
 
-
             // if 문 정리 : 기존 오브젝트를 먼저 활용하고 모자란 것을 풀링한다는 구문
             if (index < transform.childCount)       // 인덱스가 자신의 자식 오브젝트 개수보다 작다면
             {
@@ -130,10 +123,8 @@ public class Weapon : MonoBehaviour
                 bullet.parent = transform;      // PoolManager가 아닌 Bullet을 따라가야 하기 때문에 부모 변경
             }
 
-
             bullet.localPosition = Vector3.zero;            // 플레이어의 위치로 초기화
             bullet.localRotation = Quaternion.identity;     // 회전값도 초기화
-
 
             Vector3 rotVec = Vector3.forward * 360 * index / count;
             bullet.Rotate(rotVec);

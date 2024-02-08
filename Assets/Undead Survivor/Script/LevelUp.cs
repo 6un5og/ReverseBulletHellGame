@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LevelUp : MonoBehaviour
 {
-
     RectTransform rect;
     Item[] items;
 
@@ -72,9 +71,6 @@ public class LevelUp : MonoBehaviour
             {
                 ranItem.gameObject.SetActive(true);
             }
-
         }
-
-
     }
 }
